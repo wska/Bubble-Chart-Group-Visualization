@@ -3,3 +3,5 @@ Visualization assignment for grouping people by relevant skills, as part of the 
 
 
 Link to the dataset: https://docs.google.com/spreadsheets/d/1EthJzVYQMrFN2BU6TbBRnzuWkz3pTzBCt9TVs0ADNSE/edit?usp=sharing
+
+Link to github pages host: https://wska.github.io/
