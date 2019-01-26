@@ -1,0 +1,19 @@
+/* William Skagerström, 2019-01-26*/
+ div#filter {
+  padding-left: 200px; 
+}
+
+div#x-axis {
+  padding-left: 200px;
+}
+
+div#header {
+  padding-left: 150px;
+  padding-top: 20px;
+}
+
+div#chart_div {
+  padding-top: 0px;
+  padding-left: 0px;
+}
+

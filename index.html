@@ -1,0 +1,254 @@
+<!-- William Skagerström, 2019-01-26 -->
+<html>
+  <head>
+
+    <!--Using the google visualization API framework-->
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="text/javascript">
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+
+      // Runs when the Google Visualization API is loaded. Default Sum of skills and visualization skills.
+      google.charts.setOnLoadCallback(function() { drawChart('P', 'D'); });
+    </script>
+
+
+
+    <script type="text/javascript">
+
+      
+      xattrib = ''; // X axis
+      yattrib = ''; // Y axis
+      filter = '' // Filter. Default set to none. 
+
+      // Interest variables
+      games = 0;
+      programming = 0;
+      reading = 0;
+      music = 0;
+      art = 0;
+      movies = 0;
+      sports = 0;
+
+      function changeXAxis(x) {
+        drawChart(x, yattrib);
+      }
+      function changeYAxis(y) {
+        drawChart(xattrib, y);
+      }
+
+      function drawChart(x_value, y_value) {
+
+          xattrib = x_value;
+          yattrib = y_value;
+
+          
+          var url = 'https://docs.google.com/spreadsheets/d/1EthJzVYQMrFN2BU6TbBRnzuWkz3pTzBCt9TVs0ADNSE/edit?usp=sharing';
+          var query = new google.visualization.Query(url);
+          var sqlquery = "SELECT A,"+xattrib+","+yattrib+",B " + filter
+          //console.log(sqlquery);
+
+          query.setQuery(sqlquery);
+          
+          query.send(function (response) {
+
+              if (response.isError()) { // If the query returns an error message, display error
+                  alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+                  return;
+              }
+              
+              var dataTable = response.getDataTable();
+              var chart = new google.visualization.BubbleChart(document.querySelector('#chart_div'));
+              
+              var options = {
+
+                title : 'Graph of student skills',
+                hAxis: {title: dataTable.getColumnLabel(1)},
+                vAxis: {title: dataTable.getColumnLabel(2)},
+
+                bubble: {
+                        textStyle: {
+                        fontSize: 8,
+                        fontName: 'Arial',
+                        bold: true,
+                        color: 'black',
+                        auraColor: 'white'
+
+                        }
+                },
+                explorer: {} // Enables zooming, dragging etc
+               };
+                
+              chart.draw(dataTable, options);
+
+            
+          });
+      }
+    
+
+      function interestFilter(interestValue) {
+
+        var interestsColumnsDesignations = ['Q', 'R', 'S', 'T', 'U', 'V', 'W']; // Boolean encoded interests(Column names)
+        
+        // If on turn off, if off turn on
+        if (interestValue == 'programming') {
+          programming = (programming==1) ? 0 : 1;
+        }
+        
+        if (interestValue == 'music') {
+          music = (music==1) ? 0 : 1;
+        }
+
+        if (interestValue == 'sports') {
+          sports = (sports==1) ? 0 : 1;
+        }
+
+        if (interestValue == 'games') {
+          games = (games==1) ? 0 : 1;
+        }
+
+        if (interestValue == 'art') {
+          art = (art==1) ? 0 : 1;
+        } 
+
+        if (interestValue == 'reading') {
+          reading = (reading==1) ? 0 : 1;
+        }
+
+        if (interestValue == 'movies') {
+          movies = (movies==1) ? 0 : 1;
+        } 
+        
+
+        var interests = [programming, music, sports, games, art, reading, movies];
+        var sum = interests.reduce(function(a, b) { return a + b; }, 0); // Sums the values in interests
+
+        if (sum != 0) {
+          filter = 'WHERE ';
+          var count = 0; // For aligning the query with correct number of ANDs
+
+          for (var i = 0; i<interestsColumnsDesignations.length; i++) {
+
+           if (interests[i] == 1) {
+            count = count + 1;
+             if (count == sum) {
+                filter = filter + interestsColumnsDesignations[i] + ' = 1 ';
+             } else {
+                filter = filter + interestsColumnsDesignations[i] + ' = 1 AND ';
+              }
+            }
+          }
+        } else { // No boxes selected, use default filter(none)
+          filter = '';
+        }
+      
+        //console.log(filter)
+        drawChart(xattrib, yattrib);
+      }
+    </script>
+  </head>
+
+
+  <body>
+
+    <!--Title -->
+    <div id="header">
+      <h2>IVIS Group Visualization</h2>
+    </div>
+
+    <!--Div that holds the visualization-->
+    <div id="chart_div" style="width: 1200px; height: 650px; "></div>
+
+    <!--Div for changing x-axis-->
+    <div id="x-axis" style="display:inline-block;margin-right:30px";>
+    
+      <h4>X-axis attribute</h4>
+
+      <select name="numbers" onchange="changeXAxis(this.value)" size="1">
+            <option value='D' >Information Visualization skills</option>
+            <option value='E'>Statistical skills</option>
+            <option value='F'>Mathematics skills</option>
+            <option value='G'>Drawing and artistic skills</option>
+            <option value='H'>Computer usage skills</option>
+            <option value='I'>Programming skills</option>
+            <option value='J'>Graphics programming skills</option>
+            <option value='K'>Human-computer interaction programming skills</option>
+            <option value='L'>User experience evaluation skills</option>
+            <option value='M'>Communication skills</option>
+            <option value='N'>Collaboration skills</option>
+            <option value='O'>Code repository skills</option>
+            <option value='P'selected="selected" >Sum of skills</option>
+      </select>
+    </div>
+
+    <!--Div for changing y-axis-->
+    <div id="y-axis" style="display:inline-block;margin-right:0px";>
+    
+      <h4>Y-axis attribute</h4>
+      <select name="numbers" onchange="changeYAxis(this.value)" size="1" >
+            <option value='D' >Information Visualization skills</option>
+            <option value='E'>Statistical skills</option>
+            <option value='F'>Mathematics skills</option>
+            <option value='G'>Drawing and artistic skills</option>
+            <option value='H'>Computer usage skills</option>
+            <option value='I'>Programming skills</option>
+            <option value='J'>Graphics programming skills</option>
+            <option value='K'>Human-computer interaction programming skills</option>
+            <option value='L'>User experience evaluation skills</option>
+            <option value='M'>Communication skills</option>
+            <option value='N'>Collaboration skills</option>
+            <option value='O'>Code repository skills</option>
+            <option value='P'>Sum of skills</option>
+      </select>
+    </div>
+
+    <!-- Div for changing data interest filters -->
+    <div id="filter" >
+      <h4>Interest Filters</h4>
+
+      Programming
+      <label class="switch">
+        <input type="checkbox" onclick="interestFilter('programming')">
+      </label>
+
+      Music
+      <label class="switch">
+        <input type="checkbox" onclick="interestFilter('music')">
+      </label>
+
+      Sports
+      <label class="switch">
+        <input type="checkbox" onclick="interestFilter('sports')">
+      </label>
+
+      Games
+      <label class="switch">
+        <input type="checkbox" onclick="interestFilter('games')">
+      </label>
+
+      Art/Design
+      <label class="switch">
+        <input type="checkbox" onclick="interestFilter('art')">
+      </label>
+
+      Writing/Reading
+      <label class="switch">
+        <input type="checkbox" onclick="interestFilter('reading')">
+      </label>
+
+      Movies
+      <label class="switch">
+        <input type="checkbox" onclick="interestFilter('movies')">
+      </label>
+
+      
+
+    </div>
+  </body>
+</html>
