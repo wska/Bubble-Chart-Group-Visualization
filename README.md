@@ -4,4 +4,4 @@ Visualization assignment for grouping anonymized people by relevant skills, as p
 
 Link to the dataset: https://docs.google.com/spreadsheets/d/1EthJzVYQMrFN2BU6TbBRnzuWkz3pTzBCt9TVs0ADNSE/edit?usp=sharing
 
-Link to github pages host: https://wska.github.io/
+Link to github pages host: https://wska.github.io/Bubble-Chart-Group-Visualization/
